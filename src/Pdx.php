@@ -186,17 +186,16 @@ class /* "Paradox" aka. */ Pdx  implements \hlin\attribute\Contextual {
 
 			$channels = $this->channels();
 
-			$status = array
-				(
-					// ordered list of versions in processing order
-					'history' => [],
-					// current version for each channel
-					'state' => [],
-					// active channels
-					'active' => [],
-					// checklist of version requirements
-					'checklist' => $this->generate_checklist($channels)
-				);
+			$status = [
+				// ordered list of versions in processing order
+				'history' => [],
+				// current version for each channel
+				'state' => [],
+				// active channels
+				'active' => [],
+				// checklist of version requirements
+				'checklist' => $this->generate_checklist($channels)
+			];
 
 			if ( ! $dryrun) {
 				if ($has_history_table) {
@@ -322,17 +321,16 @@ class /* "Paradox" aka. */ Pdx  implements \hlin\attribute\Contextual {
 
 		$channels = $this->channels();
 
-		$status = array
-			(
-				// ordered list of versions in processing order
-				'history' => [],
-				// current version for each channel
-				'state' => [],
-				// active channels
-				'active' => [],
-				// checklist of version requirements
-				'checklist' => $this->generate_checklist($channels)
-			);
+		$status = [
+			// ordered list of versions in processing order
+			'history' => [],
+			// current version for each channel
+			'state' => [],
+			// active channels
+			'active' => [],
+			// checklist of version requirements
+			'checklist' => $this->generate_checklist($channels)
+		];
 
 		// inject current history
 		list($history, $err) = $this->history();
@@ -469,29 +467,25 @@ class /* "Paradox" aka. */ Pdx  implements \hlin\attribute\Contextual {
 	 */
 	protected function initialize_migration_state(array & $channelinfo, $channel, $version, $hotfix) {
 		$self = $this;
-		return array
-			(
-				'writer' => function () use ($self) {
-					$self->log(call_user_func_array('sprintf', func_get_args()));
-				},
-				'channelinfo' => & $channelinfo,
-				'tables' => [],
-				'identity' => array
-					(
-						'channel' => $channel,
-						'version' => $version,
-						'hotfix'  => $hotfix,
-					),
-				'sql' => array
-					(
-						'constants' => $this->constants,
-						'default' => array
-							(
-								'engine' => $this->default_db_engine(),
-								'charset' => $this->default_db_charset(),
-							),
-					),
-			);
+		return [
+			'writer' => function () use ($self) {
+				$self->log(call_user_func_array('sprintf', func_get_args()));
+			},
+			'channelinfo' => & $channelinfo,
+			'tables' => [],
+			'identity' => [
+				'channel' => $channel,
+				'version' => $version,
+				'hotfix'  => $hotfix,
+			],
+			'sql' => [
+				'constants' => $this->constants,
+				'default' => [
+					'engine' => $this->default_db_engine(),
+					'charset' => $this->default_db_charset(),
+				],
+			],
+		];
 	}
 
 	/**

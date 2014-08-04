@@ -155,10 +155,10 @@ class MakeCommand implements \hlin\archetype\Command {
 			throw new Panic("Failed to detect directory for $classpath");
 		}
 
-		$syspath = $this->context->path('syspath');
+		$rootpath = $this->context->path('rootpath');
 
 		if (file_exists($classpath)) {
-			$friendlyclasspath = str_replace(DIRECTORY_SEPARATOR, '/', str_replace($syspath, 'syspath:', $classpath));
+			$friendlyclasspath = str_replace(DIRECTORY_SEPARATOR, '/', str_replace($rootpath, 'rootpath:', $classpath));
 			$cli->printf("The file $friendlyclasspath already exists.\n");
 			return null;
 		}
@@ -179,7 +179,7 @@ class MakeCommand implements \hlin\archetype\Command {
 			;
 
 
-		$shortclasspath = str_replace('\\', '/', str_replace($syspath, 'syspath:', $classpath));
+		$shortclasspath = str_replace('\\', '/', str_replace($rootpath, 'rootpath:', $classpath));
 
 		$create_class_desc = "write in $shortclasspath the class \\$phpnamespace\\$name";
 
@@ -235,7 +235,7 @@ class MakeCommand implements \hlin\archetype\Command {
 		$actions = [];
 
 		if ( ! file_exists($classdirpath)) {
-			$friendlyclassdirpath = str_replace(DIRECTORY_SEPARATOR, '/', str_replace($syspath, 'syspath:', $classdirpath));
+			$friendlyclassdirpath = str_replace(DIRECTORY_SEPARATOR, '/', str_replace($rootpath, 'rootpath:', $classdirpath));
 			$actions["create the directory path $friendlyclassdirpath in mode 0770"]
 				= function () use ($fs, $classdirpath) {
 					return $fs->mkdir($classdirpath, 0770, true);
