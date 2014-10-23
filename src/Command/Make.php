@@ -22,7 +22,7 @@ class MakeCommand implements \hlin\archetype\Command {
 		$thing = array_shift($args);
 		// did we get the query request?
 		if ($thing == '?') {
-			$cli->printf(implode("\n", $this->supported_domains()));
+			$cli->printf(implode("\n", $this->supported_domains())."\n");
 			return 0;
 		}
 		// did we get a domain?
@@ -172,33 +172,52 @@ class MakeCommand implements \hlin\archetype\Command {
 			$group = $namespace;
 		}
 
-		$classfile
-			= "<?php namespace $phpnamespace;\n\n"
-			. "/**\n * ...\n */\n"
-			. "class $name"
-			;
-
 		$shortclasspath = str_replace('\\', '/', str_replace($rootpath, 'rootpath:', str_replace('\\', '/', $classpath)));
 
 		$filemode = $this->filePermissions();
 		$create_class_desc = "write in $shortclasspath (".sprintf('0%o', $filemode).") the class \\$phpnamespace\\$name";
 
+		$prelude = "<?php namespace $phpnamespace;\n\n";
+
 		$archtypes = $this->confs->read('freia/make/patterns');
+		if ($archtype !== null && isset($archtypes[$archtype])) {
+			$ci = $archtypes[$archtype]; # class information
+			if ( isset($ci['aliases']) && ! empty($ci['aliases'])) {
+				foreach ($ci['aliases'] as $entity => $name) {
+					if (is_numeric($entity)) {
+						$prelude .= "use ".\hlin\PHP::pnn($name).";\n";
+					}
+					else { // non-numeric
+						$prelude .= "use ".\hlin\PHP::pnn($entity)." as $name;\n";
+					}
+				}
+
+				$prelude .= "\n";
+			}
+		}
+
+		$classfile
+			= $prelude
+			. "/**\n * ...\n */\n"
+			. "class $name"
+			;
+
 		if ($archtype !== null && isset($archtypes[$archtype])) {
 			$ci = $archtypes[$archtype]; # class information
 			$doc_parts = [];
 			if ( ! empty($ci['extends'])) {
-				$classfile .= " extends {$ci['extends']}";
+				$parent_class = strpos($ci['extends'], '.') === false ? $ci['extends'] : \hlin\PHP::pnn($ci['extends']);
+				$classfile .= " extends {$parent_class}";
 				$doc_parts[] = " that extends {$ci['extends']}";
 			}
 			if ( ! empty($ci['implements'])) {
-				$interfaces = implode(', ', array_map(function ($i) { return \hlin\PHP::pnn($i); }, $ci['implements']));
+				$interfaces = implode(', ', array_map(function ($i) { return strpos($i, '.') === false ? $i : \hlin\PHP::pnn($i); }, $ci['implements']));
 				$classfile .= " implements $interfaces";
 				$doc_parts[] = (count($doc_parts) == 0 ? ' that ' : ' ')."implements $interfaces";
 			}
 			$classfile .= " {\n";
 			if ( ! empty($ci['use'])) {
-				$classfile .= "\n\tuse ".implode(";\n\tuse ", array_map(function ($i) { return \hlin\PHP::pnn($i); }, $ci['use'])).";\n";
+				$classfile .= "\n\tuse ".implode(";\n\tuse ", array_map(function ($i) { return strpos($i, '.') === false ? $i : \hlin\PHP::pnn($i); }, $ci['use'])).";\n";
 				$traits = implode(', ', $ci['use']);
 				if (count($ci['use']) == 1) {
 					$doc_parts[] = (count($doc_parts) == 0 ? ' that ' : ' ')."uses the trait $traits";
