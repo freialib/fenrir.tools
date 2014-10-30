@@ -183,12 +183,12 @@ class MakeCommand implements \hlin\archetype\Command {
 		if ($archtype !== null && isset($archtypes[$archtype])) {
 			$ci = $archtypes[$archtype]; # class information
 			if ( isset($ci['aliases']) && ! empty($ci['aliases'])) {
-				foreach ($ci['aliases'] as $entity => $name) {
+				foreach ($ci['aliases'] as $entity => $alias_name) {
 					if (is_numeric($entity)) {
-						$prelude .= "use ".\hlin\PHP::pnn($name).";\n";
+						$prelude .= "use ".\hlin\PHP::pnn($alias_name).";\n";
 					}
 					else { // non-numeric
-						$prelude .= "use ".\hlin\PHP::pnn($entity)." as $name;\n";
+						$prelude .= "use ".\hlin\PHP::pnn($entity)." as {$alias_name};\n";
 					}
 				}
 
