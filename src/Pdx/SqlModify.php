@@ -39,7 +39,7 @@ class SqlModifyPdx implements PdxMethodSignature {
 				catch (\Exception $e) {
 					$writer = $state['writer'];
 					$writer("\nException while running [modify] migration operation for [{$table}].\n\n");
-					$writer("Definition:\n\n%s\n\n", \app\Text::reindent($def));
+					$writer("Definition:\n\n%s\n\n", \hlin\Text::reindent($def));
 					throw $e;
 				}
 
