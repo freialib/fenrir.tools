@@ -63,7 +63,7 @@ class PdxCommand implements \hlin\archetype\Command {
 	function databases() {
 
 		$cli = $this->cli;
-		$dbs = $this->confs->read('freia/databases');
+		$dbs = $this->dbs();
 
 		foreach (array_keys($dbs) as $key) {
 			$cli->printf("  $key\n");
@@ -339,7 +339,7 @@ class PdxCommand implements \hlin\archetype\Command {
 		}
 
 		$constants = $this->confs->read("freia/paradox-$dbtype-constants");
-		$dbconf = $this->confs->read('freia/databases');
+		$dbconf = $this->dbs();
 		$cli = $this->cli;
 
 		if ( ! isset($dbconf[$database])) {
@@ -375,6 +375,15 @@ class PdxCommand implements \hlin\archetype\Command {
 
 		// we failed...
 		return $dbtype;
+	}
+
+	/**
+	 * Overwrite Hook.
+	 *
+	 * @return array
+	 */
+	protected function dbs() {
+		return $this->confs->read('freia/databases');
 	}
 
 } # class
