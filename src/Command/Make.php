@@ -155,10 +155,10 @@ class MakeCommand implements \hlin\archetype\Command {
 			throw new Panic("Failed to detect directory for $classpath");
 		}
 
-		$rootpath = str_replace('\\', '/', $this->context->path('rootpath'));
+		$syspath = str_replace('\\', '/', $this->context->path('syspath'));
 
 		if (file_exists($classpath)) {
-			$friendlyclasspath = str_replace('\\', '/', str_replace($rootpath, 'rootpath:', str_replace('\\', '/', $classpath)));
+			$friendlyclasspath = str_replace('\\', '/', str_replace($syspath, 'syspath:', str_replace('\\', '/', $classpath)));
 			$cli->printf("The file $friendlyclasspath already exists.\n");
 			return null;
 		}
@@ -172,7 +172,7 @@ class MakeCommand implements \hlin\archetype\Command {
 			$group = $namespace;
 		}
 
-		$shortclasspath = str_replace('\\', '/', str_replace($rootpath, 'rootpath:', str_replace('\\', '/', $classpath)));
+		$shortclasspath = str_replace('\\', '/', str_replace($syspath, 'syspath:', str_replace('\\', '/', $classpath)));
 
 		$filemode = $this->filePermissions();
 		$create_class_desc = "write in $shortclasspath (".sprintf('0%o', $filemode).") the class \\$phpnamespace\\$name";
@@ -255,7 +255,7 @@ class MakeCommand implements \hlin\archetype\Command {
 
 		if ( ! file_exists($classdirpath)) {
 			$dirmode = $this->dirPermissions();
-			$friendlyclassdirpath = str_replace('\\', '/', str_replace($rootpath, 'rootpath:', str_replace('\\', '/', $classdirpath)));
+			$friendlyclassdirpath = str_replace('\\', '/', str_replace($syspath, 'syspath:', str_replace('\\', '/', $classdirpath)));
 			$actions["create the directory path $friendlyclassdirpath (".sprintf('0%o', $dirmode).')']
 				= function () use ($fs, $classdirpath, $dirmode) {
 					return $fs->mkdir($classdirpath, $dirmode, true);

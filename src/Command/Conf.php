@@ -43,9 +43,9 @@ class ConfCommand implements \hlin\archetype\Command {
 				$filemap = $this->context->filemap();
 				$files = $filemap->file($this->fs, "confs/$param.php", 'cfs-files');
 				if ($files != null) {
-					$rootpath = $this->context->path('rootpath');
+					$syspath = $this->context->path('syspath');
 					foreach ($files as $file) {
-						$prettyfilename = str_replace(DIRECTORY_SEPARATOR, '/', str_replace($rootpath, 'rootpath:', $file));
+						$prettyfilename = str_replace(DIRECTORY_SEPARATOR, '/', str_replace($syspath, 'syspath:', $file));
 						$cli->printf("\n  $prettyfilename\n ".str_repeat('-', 77)." \n\n");
 						$conf = $this->_include($file);
 						$this->printconfig($conf);
@@ -62,11 +62,11 @@ class ConfCommand implements \hlin\archetype\Command {
 				$filemap = $this->context->filemap();
 				$files = $filemap->file($this->fs, "confs/$param.php", 'cfs-files');
 				if ($files != null) {
-					$rootpath = $this->context->path('rootpath');
+					$syspath = $this->context->path('syspath');
 					$idx = 1;
 					$cli->printf("\n Lower index means higher priority (ie. top files overwrite lower).\n\n");
 					foreach ($files as $file) {
-						$prettyfilename = str_replace(DIRECTORY_SEPARATOR, '/', str_replace($rootpath, 'rootpath:', $file));
+						$prettyfilename = str_replace(DIRECTORY_SEPARATOR, '/', str_replace($syspath, 'syspath:', $file));
 						$cli->printf("  %02s  $prettyfilename\n", $idx);
 						$idx++;
 					}
