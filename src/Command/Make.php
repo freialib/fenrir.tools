@@ -16,7 +16,7 @@ class MakeCommand implements \hlin\archetype\Command {
 		$cli = $this->cli;
 		// did we get a parameter?
 		if (count($args) == 0) {
-			$cli->printf("You must specify the thing which you wish to create.");
+			$cli->printf("You must specify the thing which you wish to create.\n");
 			return 500;
 		}
 		$thing = array_shift($args);
@@ -34,7 +34,7 @@ class MakeCommand implements \hlin\archetype\Command {
 			$domain = $this->guess_domain($thing);
 			// handle error state
 			if ($domain === null) {
-				$cli->printf("Failed to guess the problem domain. Please use the domain syntax.");
+				$cli->printf("Failed to guess the problem domain. Please use the domain syntax.\n");
 				return 500;
 			}
 
@@ -42,7 +42,7 @@ class MakeCommand implements \hlin\archetype\Command {
 		}
 
 		if ( ! in_array($domain, $this->supported_domains())) {
-			$cli->printf("The problem domain $domain is not supported.");
+			$cli->printf("The problem domain $domain is not supported.\n");
 			return 500;
 		}
 
@@ -51,11 +51,11 @@ class MakeCommand implements \hlin\archetype\Command {
 
 		// verify solution
 		if ($solution === false) {
-			$cli->printf("There is currently no available solution for the problem.");
+			$cli->printf("There is currently no available solution for the problem.\n");
 			return 500;
 		}
 		else if ($solution === null || empty($solution)) {
-			$cli->printf("Failed to solve problem.");
+			$cli->printf("Failed to solve problem.\n");
 			return 500;
 		}
 

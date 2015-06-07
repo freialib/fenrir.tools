@@ -17,7 +17,7 @@ class ConfCommand implements \hlin\archetype\Command {
 		$cli = $this->cli;
 
 		if (empty($args)) {
-			$cli->printf("Incorrect command invokation.");
+			$cli->printf("Incorrect command invokation.\n");
 			return 500;
 		}
 
@@ -28,7 +28,7 @@ class ConfCommand implements \hlin\archetype\Command {
 		}
 		else { // non-scan command
 			if (empty($args)) {
-				$cli->printf("Missing configuration path.");
+				$cli->printf("Missing configuration path.\n");
 				return 500;
 			}
 
@@ -54,7 +54,7 @@ class ConfCommand implements \hlin\archetype\Command {
 					return 0;
 				}
 				else { // no files found
-					$cli->printf("Could not find any configuration file.");
+					$cli->printf("Could not find any configuration file.\n");
 					return 404;
 				}
 			}
@@ -73,12 +73,12 @@ class ConfCommand implements \hlin\archetype\Command {
 					return 0;
 				}
 				else { // no files found
-					$cli->printf("Could not find any configuration file.");
+					$cli->printf("Could not find any configuration file.\n");
 					return 404;
 				}
 			}
 			else { // unknown command
-				$cli->printf("Unrecognized command.");
+				$cli->printf("Unrecognized command.\n");
 				return 500;
 			}
 		}
