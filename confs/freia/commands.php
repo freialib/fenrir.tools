@@ -58,14 +58,14 @@
 			"The paradox system is capable of handling a modular system.",
 		'examples' => [
 			"list" => "View databases known to system",
-			"log demo.mysql" => "Show history of the demo.mysql database",
-			"init demo.mysql" => "Dry-run for setup of demo.mysql for the first time",
-			"init demo.mysql !" => "Setup demo.mysql for the first time",
-			"rm demo.mysql" => "Dry-run for deletion of demo.mysql",
-			"rm demo.mysql !" => "Delete demo.mysql as it's know by history",
-			"rm demo.mysql --hard !" => "Hard delete demo.mysql",
-			"sync demo.mysql" => "Dry-run for syncing the demo.mysql database",
-			"sync demo.mysql !" => "Sync demo.mysql database",
+			"log main.mysql" => "Show history of the main.mysql database",
+			"init main.mysql" => "Dry-run for setup of main.mysql for the first time",
+			"init main.mysql !" => "Setup main.mysql for the first time",
+			"rm main.mysql" => "Dry-run for deletion of main.mysql",
+			"rm main.mysql !" => "Delete main.mysql as it's know by history",
+			"rm main.mysql --hard !" => "Hard delete main.mysql",
+			"sync main.mysql" => "Dry-run for syncing the main.mysql database",
+			"sync main.mysql !" => "Sync main.mysql database",
 		],
 		'help' =>
 			" :invokation list\n\n".

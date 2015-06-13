@@ -5,7 +5,7 @@
  * @license BSD-2 <http://freialib.github.io/license.txt>
  * @package freia Library
  */
-class /* "Paradox" aka. */ Pdx  implements \hlin\attribute\Contextual {
+class Pdx /* aka. "Paradox" */ implements \hlin\attribute\Contextual {
 
 	use \hlin\ContextualTrait;
 
@@ -58,12 +58,32 @@ class /* "Paradox" aka. */ Pdx  implements \hlin\attribute\Contextual {
 	protected $verbose = true;
 
 	/**
+	 * @var int
+	 */
+	protected $maxcols;
+
+	/**
 	 * @return static
 	 */
-	static function instance(\hlin\archetype\Context $context, array $dbconf, array $conf = [], array $constants = [], callable $logger = null, $verbose = true, $dbtype = 'mysql', array $stepconf = null) {
+	static function instance(\hlin\archetype\Context $context, array $dbconf, array $conf = null, array $constants = null, callable $logger = null, $verbose = true, $dbtype = 'mysql', array $stepconf = null) {
+
+		if ($conf == null) {
+			$conf = [];
+		}
+
+		if ($constants == null) {
+			$constants = [];
+		}
 
 		$i = new static;
 		$i->context_is($context);
+
+		try {
+			$i->maxcols = exec('tput cols');
+		}
+		catch (\Exception $e) {
+			$i->maxcols = 60;
+		}
 
 		// Paradox configuration
 		// ---------------------
@@ -202,7 +222,7 @@ class /* "Paradox" aka. */ Pdx  implements \hlin\attribute\Contextual {
 					$this->rm();
 				}
 				else { // no history table available
-					$this->log(" Skipped uninstall. Database is clean.\n");
+					$this->log("Skipped uninstall. Database is clean.\n");
 				}
 			}
 
@@ -307,7 +327,7 @@ class /* "Paradox" aka. */ Pdx  implements \hlin\attribute\Contextual {
 					->execute();
 			}
 			else { // empty tables
-				$this->log(" Nothing to remove.\n");
+				$this->log("Nothing to remove.\n");
 			}
 		}
 
@@ -370,7 +390,7 @@ class /* "Paradox" aka. */ Pdx  implements \hlin\attribute\Contextual {
 			}
 		}
 		else { // no history
-			$this->log(" No changes required.\n");
+			$this->log("No changes required.\n");
 			return [$migrations, 0];
 		}
 
@@ -422,6 +442,16 @@ class /* "Paradox" aka. */ Pdx  implements \hlin\attribute\Contextual {
 	 * @return boolean
 	 */
 	protected function log($message) {
+
+		// terminals wrap around; if we dont take this into account
+		// and try to do \r display trickery the message will easily
+		// go to the next line and the \r will then not do what was
+		// intended; typically resulting in a lot of dumb white space
+
+		if (strlen($message) > $this->maxcols) {
+			$message = substr($message, 0, $this->maxcols);
+		}
+
 		// the writer function is a function that recieves just one string
 		call_user_func($this->writer, $message);
 
@@ -677,7 +707,7 @@ class /* "Paradox" aka. */ Pdx  implements \hlin\attribute\Contextual {
 				{
 					if ($self->context->php_sapi_name() === 'cli') {
 						$self->log("\r");
-						$self->log(str_repeat(' ', 80));
+						$self->log(str_repeat(' ', $self->maxcols));
 						$self->log("\r");
 
 						$self->log (
@@ -701,7 +731,7 @@ class /* "Paradox" aka. */ Pdx  implements \hlin\attribute\Contextual {
 
 			if ($this->context->php_sapi_name() === 'cli') {
 				$this->log("\r");
-				$this->log(str_repeat(' ', 80));
+				$this->log(str_repeat(' ', $self->maxcols));
 				$this->log("\r");
 			}
 			else { // standard end of line
@@ -715,7 +745,7 @@ class /* "Paradox" aka. */ Pdx  implements \hlin\attribute\Contextual {
 
 		if ($this->context->php_sapi_name() === 'cli') {
 			$this->log("\r");
-			$this->log(str_repeat(' ', 80));
+			$this->log(str_repeat(' ', $self->maxcols));
 			$this->log("\r");
 		}
 

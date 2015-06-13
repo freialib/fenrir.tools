@@ -17,8 +17,10 @@ class PdxCommand implements \hlin\archetype\Command {
 		$cli = $this->cli;
 
 		if (empty($args)) {
-			$cli->printf("Incorrect command invokation.");
-			return 500;
+			// $cli->printf("Incorrect command invokation; you must specify a sub-command please see help\n");
+			$cmd = \hlin\CmdhelpCommand::instance($this->context);
+			$cmd->main([ 'pdx' ]);
+			return 0;
 		}
 
 		$command = array_shift($args);
@@ -28,7 +30,7 @@ class PdxCommand implements \hlin\archetype\Command {
 		}
 
 		if (empty($args)) {
-			$cli->printf("Missing database.");
+			$cli->printf("Missing database argument.\n");
 			return 500;
 		}
 
@@ -50,7 +52,7 @@ class PdxCommand implements \hlin\archetype\Command {
 			return $this->rm($dbname, $args);
 		}
 		else { // unknown command
-			$cli->printf("Unrecognized command.");
+			$cli->printf("Unrecognized command.\n");
 			return 500;
 		}
 
@@ -80,7 +82,7 @@ class PdxCommand implements \hlin\archetype\Command {
 		$cli = $this->cli;
 
 		if (($pdx = $this->pdx($database, $this->is_verbose($args))) === null) {
-			$cli->printf("Failed to create paradox.");
+			$cli->printf("Failed to create paradox.\n");
 			return 500;
 		}
 
@@ -108,7 +110,7 @@ class PdxCommand implements \hlin\archetype\Command {
 		}
 
 		if (empty($log)) {
-			$cli->printf("\n No history.\n");
+			$cli->printf("\nNo history.\n");
 		}
 		else { // display history
 			$format = " %4s  %-10s  %-20s  %-7s  %s\n";
@@ -163,7 +165,7 @@ class PdxCommand implements \hlin\archetype\Command {
 		$cli = $this->cli;
 
 		if (($pdx = $this->pdx($database, $this->is_verbose($args))) === null) {
-			$cli->printf("Failed to create paradox.");
+			$cli->printf("Failed to create paradox.\n");
 			return 500;
 		}
 
@@ -197,8 +199,10 @@ class PdxCommand implements \hlin\archetype\Command {
 			}
 		}
 		else { // not dry run
-			$cli->printf("\n\n  Initialization complete.\n");
+			$cli->printf("\n\nInitialization complete.\n");
 		}
+
+		$cli->printf("\n");
 
 		return $err;
 	}
@@ -211,7 +215,7 @@ class PdxCommand implements \hlin\archetype\Command {
 		$cli = $this->cli;
 
 		if (($pdx = $this->pdx($database, $this->is_verbose($args))) === null) {
-			$cli->printf("Failed to create paradox.");
+			$cli->printf("Failed to create paradox.\n");
 			return 500;
 		}
 
@@ -235,13 +239,15 @@ class PdxCommand implements \hlin\archetype\Command {
 		list($res, $status) = $pdx->rm($dryrun, $harduninstall);
 
 		if ($status != 0) {
-			$cli->printf(" rm operation denied!\n");
+			$cli->printf("rm operation denied!\n");
 			return $status;
 		}
 
 		if ($dryrun) {
 			$this->rm_print_dryrun($database, $res);
 		}
+
+		$cli->printf("\n");
 
 		return $status;
 	}
@@ -254,7 +260,7 @@ class PdxCommand implements \hlin\archetype\Command {
 		$cli = $this->cli;
 
 		if (($pdx = $this->pdx($database, $this->is_verbose($args))) === null) {
-			$cli->printf("Failed to create paradox.");
+			$cli->printf("Failed to create paradox.\n");
 			return 500;
 		}
 
@@ -269,14 +275,14 @@ class PdxCommand implements \hlin\archetype\Command {
 		list($res, $status) = $pdx->sync($dryrun);
 
 		if ($status != 0) {
-			$cli->printf("\n Sync denied!\n");
+			$cli->printf("\nSync denied! Your database may be locked to destructive changes.\n");
 			return $status;
 		}
 
 		if ($dryrun) {
 			$cli->printf("\n");
 			if (empty($res)) {
-				$cli->printf(" Nothing to sync.\n");
+				$cli->printf("Nothing to sync.\n");
 			}
 			else { // ! empty result
 				foreach ($res as $entry) {
@@ -288,11 +294,12 @@ class PdxCommand implements \hlin\archetype\Command {
 
 			if ($res > 0) {
 				$cli->printf("\n\n");
-
 			}
 
-			$cli->printf(" Sync complete.\n");
+			$cli->printf("Sync complete.\n");
 		}
+
+		$cli->printf("\n");
 
 		return $status;
 	}
@@ -303,7 +310,9 @@ class PdxCommand implements \hlin\archetype\Command {
 	 * ...
 	 */
 	protected function dryrun_disclaimer() {
-		$this->cli->printf("\n Dry run; please verify the command will produce the desired effect.\n Add \"!\" at the end of the command to execute.\n");
+		$this->cli->printf("\n");
+		$this->cli->printf("Dry run; please verify the command will produce the desired effect.\n");
+		$this->cli->printf("Add \"!\" at the end of the command to execute.\n");
 	}
 
 	/**
