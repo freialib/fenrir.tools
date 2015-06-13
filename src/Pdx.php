@@ -93,7 +93,7 @@ class Pdx /* aka. "Paradox" */ implements \hlin\attribute\Contextual {
 			$nconf[$channel] = [];
 			foreach ($versions as $version => $value) {
 				if (is_array($value)) {
-					call_user_func_array([$i, 'conf'], $value);
+					$nconf[$channel][$version] = call_user_func_array([$i, 'conf'], $value);
 				}
 				else { // $value is not an array (assume string)
 					$nconf[$channel][$version] = $i->conf($value);

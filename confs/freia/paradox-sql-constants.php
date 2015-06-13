@@ -63,4 +63,13 @@
 		# around 4 to 9; 16 used for safety (assuming misc characters)
 		'postalcode' => 'varchar(16)',
 
+		# password info
+		'pwdinfo' => 'varchar(2048)',
+
+		# unix timestamp
+		'time' => 'bigint',
+
+		# bit flags
+		'flags' => 'bigint DEFAULT 0 NOT NULL'
+
 	); # conf
