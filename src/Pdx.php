@@ -85,6 +85,16 @@ class Pdx /* aka. "Paradox" */ implements \hlin\attribute\Contextual {
 			$i->maxcols = 60;
 		}
 
+		if (is_int($i->maxcols)) {
+			$i->maxcols = intval($i->maxcols);
+			if ($i->maxcols < 60) {
+				$i->maxcols = 60;
+			}
+		}
+		else {
+			$i->maxcols = 60;
+		}
+
 		// Paradox configuration
 		// ---------------------
 
